@@ -22,12 +22,19 @@
       <tr>
         <th>Shift Start</th>
         <th>Shift End</th>
+        <th>Earned</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let shift of employeeShifts">
-        <td> {{shift.shiftStart | date: dateFormat}} </td>
-        <td> {{shift.shiftEnd| date: dateFormat}} </td>
+        <td> {{shift.shift.shiftStart | date: dateFormat}} </td>
+        <td> {{shift.shift.shiftEnd| date: dateFormat}} </td>
+        <td> {{shift.calculated | currency:'EUR':'symbol':'1.2-2' }} </td>
+      </tr>
+      <tr>
+        <td> </td>
+        <td> Total </td>
+        <td> {{employeeSalaryTotal | currency:'EUR':'symbol':'1.2-2'}} </td>
       </tr>
     </tbody>
   </table>

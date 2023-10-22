@@ -1,4 +1,7 @@
 export interface EmployeeShift {
-  shiftStart: string;
-  shiftEnd: string;
+  shift: {
+    shiftStart: string;
+    shiftEnd: string;
+  },
+  calculated: number;  
 }

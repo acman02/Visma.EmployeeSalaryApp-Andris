@@ -20,6 +20,7 @@ export class SalaryOverviewComponent implements OnInit {
 
   public employeeShifts: EmployeeShift[] = [];
   public employeeSalaryRate: number = 0;
+  public employeeSalaryTotal: number = 0;
   private subscriptions: Subscription = new Subscription();
 
   constructor(private employeeApiService: EmployeeApiService) { }
@@ -27,6 +28,7 @@ export class SalaryOverviewComponent implements OnInit {
   public ngOnInit(): void {
     this.refreshEmployeeShifts(this.formGroup.value).subscribe();
     this.refreshSalaryRate(this.formGroup.value?.employeeId ?? null).subscribe()
+    this.refreshSalaryTotal(this.formGroup.value).subscribe()
     this.setupSubscriptions();
   }
 
@@ -43,6 +45,14 @@ export class SalaryOverviewComponent implements OnInit {
       this.formGroup.controls.employeeId.valueChanges
       .pipe(
         switchMap(employeeId => this.refreshSalaryRate(employeeId))
+      )
+      .subscribe()
+    );
+
+    this.subscriptions.add(
+      this.formGroup.valueChanges
+      .pipe(
+        switchMap(formValue => this.refreshSalaryTotal(formValue))
       )
       .subscribe()
     );
@@ -76,6 +86,19 @@ export class SalaryOverviewComponent implements OnInit {
         this.employeeSalaryRate = salaryRate;
       })
     );
+  }
+
+  private refreshSalaryTotal(formValue: Partial<IFormData>): Observable<unknown> {
+    if (!formValue.employeeId || !formValue.year || !formValue.month) {
+      throw new Error('Invalid form value');
+    }
+
+    return this.employeeApiService.GetEmployeeSalaryTotal(formValue.employeeId, formValue.year, formValue.month)
+      .pipe(
+        tap((salaryTotal) => {
+          this.employeeSalaryTotal = salaryTotal;
+        })
+      );
   }
 }
 

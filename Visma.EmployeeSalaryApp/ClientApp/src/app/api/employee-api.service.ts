@@ -13,10 +13,14 @@ export class EmployeeApiService {
   }
 
   public GetEmployeeShifts(employeeId: number, year: number, month: number): Observable<EmployeeShift[]> {
-    return this.httpClient.get<EmployeeShift[]>(`/api/employees/${employeeId}/shifts/${year}-${month}`)
+    return this.httpClient.get<EmployeeShift[]>(`/api/employees/${employeeId}/shiftscalculated/${year}-${month}`)
   }
   
   public GetEmployeeSalaryRate(employeeId: number): Observable<number> {
     return this.httpClient.get<number>(`/api/employees/${employeeId}/salary-rate`);
+  }
+
+  public GetEmployeeSalaryTotal(employeeId: number, year: number, month: number): Observable<number> {
+    return this.httpClient.get<number>(`/api/employees/${employeeId}/shifttotal/${year}-${month}`);
   }
 }
