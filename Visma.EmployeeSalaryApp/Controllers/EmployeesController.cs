@@ -31,16 +31,49 @@ public class EmployeesController : ControllerBase
 
 
     [HttpGet("{employeeId:int}/shiftscalculated/{year:int}-{month:int}")]
-    public ICollection<ShiftCalculated> GetEmployeeShiftsCalculated([FromRoute] int employeeId, [FromRoute] int year, [FromRoute] int month)
+    public IActionResult GetEmployeeShiftsCalculated([FromRoute] int employeeId, [FromRoute] int year, [FromRoute] int month)
     {
-        _employeeServiceCalculated = new CalculatedEmployeeService();
-        return _employeeServiceCalculated.GetEmployeeShiftsCalculated(employeeId, year, month);
+        try
+        {
+            if (year < 1900 || year > DateTime.UtcNow.Year || month < 1 || month > 12)
+            {
+                return BadRequest("Invalid date parameters.");
+            }
+            DateTime inputDate = new DateTime(year, month, 1);
+            if (inputDate >= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1))
+            {
+                return BadRequest("Date must be in the past.");
+            }
+            _employeeServiceCalculated = new CalculatedEmployeeService();
+            return Ok(_employeeServiceCalculated.GetEmployeeShiftsCalculated(employeeId, year, month));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 
     [HttpGet("{employeeId:int}/shifttotal/{year:int}-{month:int}")]
-    public decimal GetEmployeeTotalCalculated([FromRoute] int employeeId, [FromRoute] int year, [FromRoute] int month)
+
+    public IActionResult GetEmployeeTotalCalculated([FromRoute] int employeeId, [FromRoute] int year, [FromRoute] int month)
     {
-        _employeeServiceCalculated = new CalculatedEmployeeService();
-        return _employeeServiceCalculated.GetEmployeeTotalHours(employeeId, year, month);
+        try
+        {
+            if (year < 1900 || year > DateTime.UtcNow.Year || month < 1 || month > 12)
+            {
+                return BadRequest("Invalid date parameters.");
+            }
+            DateTime inputDate = new DateTime(year, month, 1);
+            if (inputDate >= new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1))
+            {
+                return BadRequest("Date must be in the past.");
+            }
+            _employeeServiceCalculated = new CalculatedEmployeeService();          
+            return Ok(_employeeServiceCalculated.GetEmployeeTotalHours(employeeId, year, month));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, "An error occurred while processing your request.");
+        }
     }
 }

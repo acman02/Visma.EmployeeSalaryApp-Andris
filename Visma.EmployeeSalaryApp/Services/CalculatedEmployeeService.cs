@@ -21,7 +21,6 @@ public class CalculatedEmployeeService : EmployeeService
         return calculatedshifts;
     }
 
-
     public decimal GetEmployeeTotalHours(int employeeId, int year, int month)
     {
         return (decimal)GetEmployeeShiftsCalculated(employeeId, year, month).Sum(shift => shift.calculated);
