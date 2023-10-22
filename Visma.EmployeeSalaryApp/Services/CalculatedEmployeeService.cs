@@ -25,5 +25,4 @@ public class CalculatedEmployeeService : EmployeeService
     {
         return (decimal)GetEmployeeShiftsCalculated(employeeId, year, month).Sum(shift => shift.calculated);
     }
- 
 }
